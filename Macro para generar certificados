@@ -1,0 +1,68 @@
+Sub combinar()
+
+'Establecer variables
+
+Dim shtParticipantes As Worksheet
+    Dim strParticipante As String
+    Dim strCedula As String
+    Dim strFolio As String
+    Dim strRenglon As String
+    Dim strCodigo As String
+    Dim strFecha As String
+    Dim strCurso As String
+    Dim strDuración As String
+    Dim filaInicial As Long
+    Dim columnaCedula As Long
+    Dim objPPT As Object
+    Dim objPres As Object
+    Dim objSld As Object
+    Dim objShp As Object
+    
+    'Seleccionar Hoja de datos y Crear el Objeto PowerPoint
+    
+    Set shtParticipantes = Worksheets("Participantes")
+    
+    Set objPPT = CreateObject("Powerpoint.Application")
+    objPPT.Visible = True
+    Set objPres = objPPT.presentations.Open(ThisWorkbook.Path & "\certificado hca.pptx")
+    objPres.SaveAs ThisWorkbook.Path & "\combinados.pptx"
+    
+    'Establecer punto de inicio del Bucle
+    
+    filaInicial = 2
+    
+    Identificar las columnas de datos del archivo excel y colocarlas en el archivo powerpoint
+ 
+    Do While shtParticipantes.Cells(filaInicial, 1) <> ""
+        strParticipante = shtParticipantes.Cells(filaInicial, 1)
+        strCedula = shtParticipantes.Cells(filaInicial, 2)
+        strFolio = shtParticipantes.Cells(filaInicial, 3)
+        strRenglon = shtParticipantes.Cells(filaInicial, 4)
+        strCodigo = shtParticipantes.Cells(filaInicial, 5)
+        strFecha = shtParticipantes.Cells(filaInicial, 6)
+        strCurso = shtParticipantes.Cells(filaInicial, 7)
+        strDuración = shtParticipantes.Cells(filaInicial, 8)
+        Set objSld = objPres.slides(1).Duplicate
+        For Each objShp In objSld.Shapes
+            If objShp.HasTextFrame Then
+                If objShp.TextFrame.HasText Then
+                    objShp.TextFrame.TextRange.Replace "<nombre>", strParticipante
+                    objShp.TextFrame.TextRange.Replace "<cedula>", strCedula
+                    objShp.TextFrame.TextRange.Replace "<folio>", strFolio
+                    objShp.TextFrame.TextRange.Replace "<renglon>", strRenglon
+                    objShp.TextFrame.TextRange.Replace "<codigo>", strCodigo
+                    objShp.TextFrame.TextRange.Replace "<fecha>", strFecha
+                    objShp.TextFrame.TextRange.Replace "<curso>", strCurso
+                    objShp.TextFrame.TextRange.Replace "<duración>", strDuración
+                End If
+            End If
+
+        Next
+        filaInicial = filaInicial + 1
+    
+        
+    Loop
+    objPres.slides(1).Delete
+    objPres.Save
+    objPres.Close
+End Sub

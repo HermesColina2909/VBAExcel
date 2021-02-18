@@ -1,0 +1,6 @@
+# VBAExcel
+Repositorio de macros en Excel utilizando lenguaje Visual Basic for Applications para simplificar la gestion de datos y documentos en microsoft Excel
+
+Para poder instalar las macros en Excel primero debera activar la ficha programador, la cual esta ubicada en la siguiente ruta: Archivo/Opciones de Excel/Personalizar cinta de opciones/Desarrolador
+
+Una vez activado debera crear un modulo en el entorno visual basic y pegar el codigo de macro

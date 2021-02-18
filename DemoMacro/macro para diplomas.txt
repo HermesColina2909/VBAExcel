@@ -1,0 +1,51 @@
+Sub combinar()
+Dim shtParticipantes As Worksheet
+    Dim strParticipante As String
+    Dim strCedula As String
+    Dim strFolio As String
+    Dim strRenglon As String
+    Dim strCodigo As String
+    Dim filaInicial As Long
+    Dim columnaCedula As Long
+    Dim objPPT As Object
+    Dim objPres As Object
+    Dim objSld As Object
+    Dim objShp As Object
+    
+    Set shtParticipantes = Worksheets("Participantes")
+    
+    Set objPPT = CreateObject("Powerpoint.Application")
+    objPPT.Visible = True
+    Set objPres = objPPT.presentations.Open(ThisWorkbook.Path & "\diploma.pptm")
+    objPres.SaveAs ThisWorkbook.Path & "\combinados.pptx"
+    
+    filaInicial = 2
+    
+ 
+    Do While shtParticipantes.Cells(filaInicial, 1) <> ""
+        strParticipante = shtParticipantes.Cells(filaInicial, 1)
+        strCedula = shtParticipantes.Cells(filaInicial, 2)
+        strFolio = shtParticipantes.Cells(filaInicial, 3)
+        strRenglon = shtParticipantes.Cells(filaInicial, 4)
+        strCodigo = shtParticipantes.Cells(filaInicial, 5)
+        Set objSld = objPres.slides(1).Duplicate
+        For Each objShp In objSld.Shapes
+            If objShp.HasTextFrame Then
+                If objShp.TextFrame.HasText Then
+                    objShp.TextFrame.TextRange.Replace "<nombre>", strParticipante
+                    objShp.TextFrame.TextRange.Replace "<cedula>", strCedula
+                    objShp.TextFrame.TextRange.Replace "<folio>", strFolio
+                    objShp.TextFrame.TextRange.Replace "<renglon>", strRenglon
+                    objShp.TextFrame.TextRange.Replace "<codigo>", strCodigo
+                End If
+            End If
+
+        Next
+        filaInicial = filaInicial + 1
+    
+        
+    Loop
+    objPres.slides(1).Delete
+    objPres.Save
+    objPres.Close
+End Sub
